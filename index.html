@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NGAMBIS BARENG</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { DEFAULT: '#7C3AED', light: '#EDE9FE', dark: '#5B21B6' },
+            accent:  { DEFAULT: '#F97316', light: '#FFF7ED', dark: '#EA580C' },
+            teal:    { DEFAULT: '#14B8A6', light: '#CCFBF1', dark: '#0F766E' },
+            surface: '#F8F7FF',
+            card:    '#FFFFFF',
+          },
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          boxShadow: {
+            card: '0 2px 12px 0 rgba(124,58,237,0.08)',
+            'card-hover': '0 6px 24px 0 rgba(124,58,237,0.16)',
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-surface font-sans text-gray-800 min-h-screen overflow-x-hidden">
+
+  <!-- ===== SIDEBAR OVERLAY (mobile only) ===== -->
+  <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-30 hidden" role="presentation" aria-hidden="true"></div>
+
+  <!-- ===== APP SHELL ===== -->
+  <div id="appShell">
+
+    <!-- ===== SIDEBAR NAV ===== -->
+    <aside id="sidebar"
+      class="sidebar-desktop-open"
+      aria-label="Navigasi utama">
+
+      <!-- Sidebar Header -->
+      <div class="flex items-center gap-3 px-5 py-5 border-b border-gray-100">
+        <!-- Maskot Mini -->
+        <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <circle cx="18" cy="18" r="18" fill="#EDE9FE"/>
+          <ellipse cx="18" cy="22" rx="8" ry="7" fill="#7C3AED"/>
+          <circle cx="18" cy="13" r="6" fill="#FDE68A"/>
+          <circle cx="15.5" cy="12.5" r="1.2" fill="#1F2937"/>
+          <circle cx="20.5" cy="12.5" r="1.2" fill="#1F2937"/>
+          <path d="M15.5 15.5 Q18 17.5 20.5 15.5" stroke="#F97316" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <ellipse cx="18" cy="28" rx="5" ry="2.5" fill="#5B21B6"/>
+        </svg>
+        <span class="font-bold text-primary text-sm leading-tight">Ngambis<br/>Bareng</span>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 px-3 py-4 space-y-1" role="navigation">
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium text-sm transition-all"
+          data-page="beranda" aria-current="page">
+          <!-- Home icon -->
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+          </svg>
+          Beranda
+        </button>
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium text-sm transition-all"
+          data-page="tugas">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+          </svg>
+          Tugas
+        </button>
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium text-sm transition-all"
+          data-page="timer">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 3"/><path d="M9 2h6M12 2v3"/>
+          </svg>
+          Timer
+        </button>
+        <button class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left font-medium text-sm transition-all"
+          data-page="statistik">
+          <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+          </svg>
+          Statistik
+        </button>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="px-4 py-4 border-t border-gray-100 space-y-2">
+        <p class="text-xs text-gray-400 text-center">Semangat belajar hari ini! 🎯</p>
+        <button id="btnResetData"
+          class="w-full flex items-center justify-center gap-1.5 text-xs font-semibold text-gray-400 hover:text-red-400 hover:bg-red-50 py-2 px-3 rounded-xl transition-colors"
+          aria-label="Reset semua data ke kondisi awal">
+          <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          Reset Data
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div id="mainContent">
+
+      <!-- TOP BAR -->
+      <header class="sticky top-0 z-20 bg-white/90 backdrop-blur-sm border-b border-gray-100 px-4 py-3 flex items-center gap-3">
+        <!-- Hamburger -->
+        <button id="menuToggle"
+          class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-primary-light transition-colors shrink-0"
+          aria-label="Buka menu navigasi" aria-expanded="false" aria-controls="sidebar">
+          <svg id="menuIconHam" class="w-5 h-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+
+        <!-- Page Title -->
+        <h1 id="pageTitle" class="font-bold text-base text-gray-800 flex-1 truncate">Beranda</h1>
+
+        <!-- Chips -->
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- Streak Chip -->
+          <div id="streakChip"
+            class="flex items-center gap-1.5 bg-accent-light text-accent-dark font-semibold text-xs px-3 py-1.5 rounded-full"
+            aria-label="Streak belajar">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C8 8 6 11 6 14a6 6 0 0012 0c0-3-2-6-6-12z"/>
+            </svg>
+            <span id="streakCount">0</span>
+          </div>
+          <!-- Today Time Chip -->
+          <div id="todayTimeChip"
+            class="flex items-center gap-1.5 bg-primary-light text-primary-dark font-semibold text-xs px-3 py-1.5 rounded-full"
+            aria-label="Total belajar hari ini">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+            </svg>
+            <span id="todayTimeText">0 mnt</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGES CONTAINER -->
+      <main id="pagesContainer" class="flex-1 overflow-y-auto">
+
+        <!-- ========== PAGE: BERANDA ========== -->
+        <section id="page-beranda" class="page active p-4 lg:p-6 max-w-6xl mx-auto w-full">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <!-- KOLOM KIRI -->
+            <div class="space-y-4">
+              <!-- Banner Sapaan -->
+              <div id="greetingBanner" class="card-base p-5 flex items-center gap-4 bg-gradient-to-br from-primary-light to-teal-light border border-primary/10">
+                <div id="mascotGreeting" class="shrink-0"><!-- SVG injected by JS --></div>
+                <div class="flex-1 min-w-0">
+                  <p id="greetingText" class="text-xs font-medium text-primary mb-0.5">Selamat Pagi</p>
+                  <h2 id="greetingMsg" class="font-bold text-gray-800 text-base leading-snug mb-3">Semangat mulai hari!</h2>
+                  <button id="btnLanjutBelajar"
+                    class="btn-primary text-xs px-4 py-2">
+                    ▶ Lanjut Belajar
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lanjutkan Belajar -->
+              <div id="continueCard" class="card-base p-4">
+                <h3 class="font-bold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-teal rounded-full inline-block"></span>
+                  Lanjutkan Belajar
+                </h3>
+                <div id="continueCardContent"><!-- injected by JS --></div>
+              </div>
+
+              <!-- Rencana Hari Ini -->
+              <div class="card-base p-4">
+                <h3 class="font-bold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-primary rounded-full inline-block"></span>
+                  Hari ini mau belajar apa?
+                </h3>
+                <form id="planForm" class="flex gap-2 mb-3" novalidate>
+                  <input id="planInput" type="text" maxlength="80"
+                    class="input-base flex-1 text-sm"
+                    placeholder="Tambah rencana hari ini..." aria-label="Rencana belajar hari ini"/>
+                  <button type="submit" class="btn-primary text-xs px-4 shrink-0" aria-label="Tambah rencana">+</button>
+                </form>
+                <ul id="planList" class="space-y-2"><!-- injected by JS --></ul>
+              </div>
+            </div>
+
+            <!-- KOLOM KANAN -->
+            <div class="space-y-4">
+              <!-- Streak Card -->
+              <div class="card-base p-5">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-bold text-sm text-gray-700 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-accent rounded-full inline-block"></span>
+                    Streak Minggu Ini
+                  </h3>
+                  <div id="streakBadge" class="text-xs font-bold px-3 py-1 rounded-full bg-accent-light text-accent-dark">
+                    0 hari 🔥
+                  </div>
+                </div>
+                <div id="weekMascot" class="flex justify-center mb-4" style="min-height:88px;overflow:visible"><!-- SVG injected by JS --></div>
+                <div id="weekDots" class="flex justify-center gap-2"><!-- injected by JS --></div>
+              </div>
+
+              <!-- Deadline Terdekat -->
+              <div class="card-base p-4">
+                <h3 class="font-bold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-red-400 rounded-full inline-block"></span>
+                  Deadline Terdekat
+                </h3>
+                <ul id="deadlineList" class="space-y-2"><!-- injected by JS --></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== PAGE: TUGAS ========== -->
+        <section id="page-tugas" class="page hidden p-4 lg:p-6 max-w-6xl mx-auto w-full">
+          <!-- Add Form -->
+          <div class="card-base p-5 mb-5">
+            <h2 class="font-bold text-base text-gray-800 mb-4">Tambah Item</h2>
+            <form id="taskForm" class="grid grid-cols-1 sm:grid-cols-3 gap-3" novalidate>
+              <div class="sm:col-span-1">
+                <label class="label-base" for="taskTitle">Judul</label>
+                <input id="taskTitle" type="text" maxlength="100" class="input-base w-full" placeholder="Nama tugas / materi..." />
+                <p id="taskTitleErr" class="err-msg hidden">Judul wajib diisi</p>
+              </div>
+              <div>
+                <label class="label-base" for="taskType">Jenis</label>
+                <select id="taskType" class="input-base w-full">
+                  <option value="belajar">📚 Belajar</option>
+                  <option value="tugas">📝 Tugas</option>
+                </select>
+              </div>
+              <div>
+                <label class="label-base" for="taskDeadline">Tenggat</label>
+                <input id="taskDeadline" type="date" class="input-base w-full" />
+                <p id="taskDeadlineErr" class="err-msg hidden">Tenggat wajib diisi</p>
+              </div>
+              <div class="sm:col-span-3 flex justify-end">
+                <button type="submit" id="taskSubmitBtn" class="btn-primary">Tambah Item</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Task Lists -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Belajar -->
+            <div>
+              <h3 class="font-bold text-sm text-primary mb-3 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-sm bg-primary inline-block"></span>
+                Belajar
+                <span id="belajarCount" class="ml-auto text-xs bg-primary-light text-primary px-2 py-0.5 rounded-full font-semibold">0</span>
+              </h3>
+              <ul id="belajarList" class="space-y-3"><!-- injected --></ul>
+              <!-- Selesai Belajar -->
+              <details class="mt-4" id="belajarDoneDetails">
+                <summary class="text-xs font-semibold text-gray-400 cursor-pointer hover:text-gray-600 select-none">
+                  Selesai (<span id="belajarDoneCount">0</span>)
+                </summary>
+                <ul id="belajarDoneList" class="space-y-2 mt-2"><!-- injected --></ul>
+              </details>
+            </div>
+            <!-- Tugas -->
+            <div>
+              <h3 class="font-bold text-sm text-accent mb-3 flex items-center gap-2">
+                <span class="w-3 h-3 rounded-sm bg-accent inline-block"></span>
+                Tugas
+                <span id="tugasCount" class="ml-auto text-xs bg-accent-light text-accent px-2 py-0.5 rounded-full font-semibold">0</span>
+              </h3>
+              <ul id="tugasList" class="space-y-3"><!-- injected --></ul>
+              <!-- Selesai Tugas -->
+              <details class="mt-4" id="tugasDoneDetails">
+                <summary class="text-xs font-semibold text-gray-400 cursor-pointer hover:text-gray-600 select-none">
+                  Selesai (<span id="tugasDoneCount">0</span>)
+                </summary>
+                <ul id="tugasDoneList" class="space-y-2 mt-2"><!-- injected --></ul>
+              </details>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== PAGE: TIMER ========== -->
+        <section id="page-timer" class="page hidden p-4 lg:p-6 max-w-6xl mx-auto w-full">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+            <!-- KOLOM KIRI: Timer -->
+            <div class="space-y-4">
+              <div class="card-base p-6 flex flex-col items-center">
+                <p id="timerPhaseLabel" class="text-xs font-semibold text-primary uppercase tracking-widest mb-4">Fokus</p>
+                <!-- SVG Circle Timer -->
+                <div class="relative w-52 h-52 mb-5">
+                  <svg class="w-full h-full -rotate-90" viewBox="0 0 200 200" aria-hidden="true">
+                    <circle cx="100" cy="100" r="88" fill="none" stroke="#EDE9FE" stroke-width="12"/>
+                    <circle id="timerProgress" cx="100" cy="100" r="88" fill="none"
+                      stroke="#7C3AED" stroke-width="12"
+                      stroke-linecap="round"
+                      stroke-dasharray="552.9"
+                      stroke-dashoffset="0"
+                      class="transition-all duration-1000 ease-linear"/>
+                  </svg>
+                  <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="timerDisplay" class="text-4xl font-extrabold text-gray-800 tabular-nums">25:00</span>
+                    <span id="timerStatus" class="text-xs text-gray-400 mt-1">Siap mulai</span>
+                  </div>
+                </div>
+
+                <!-- Item Selector -->
+                <div class="w-full mb-4">
+                  <label class="label-base mb-1" for="timerItemSelect">Sedang mengerjakan:</label>
+                  <select id="timerItemSelect" class="input-base w-full text-sm">
+                    <option value="free-belajar">🆓 Belajar Bebas</option>
+                    <option value="free-tugas">🆓 Tugas Bebas</option>
+                  </select>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex gap-3">
+                  <button id="btnTimerStart" class="btn-primary flex-1 min-w-[100px]" aria-label="Mulai timer">
+                    ▶ Mulai
+                  </button>
+                  <button id="btnTimerPause" class="btn-secondary flex-1 min-w-[90px] hidden" aria-label="Jeda timer">
+                    ⏸ Jeda
+                  </button>
+                  <button id="btnTimerReset" class="btn-ghost" aria-label="Reset timer">↺ Reset</button>
+                  <button id="btnTimerSkip" class="btn-ghost" aria-label="Lewati sesi">⏭ Lewati</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- KOLOM KANAN: Pengaturan & Sesi -->
+            <div class="space-y-4">
+              <!-- Pengaturan Durasi -->
+              <div class="card-base p-5">
+                <h3 class="font-bold text-sm text-gray-700 mb-4 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-teal rounded-full inline-block"></span>
+                  Pengaturan Durasi (menit)
+                </h3>
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between gap-3">
+                    <label class="text-sm font-medium text-gray-600 flex-1">📚 Belajar</label>
+                    <input id="durBelajar" type="number" min="1" max="180" value="25"
+                      class="input-base w-20 text-center text-sm" aria-label="Durasi sesi belajar (menit)"/>
+                  </div>
+                  <div class="flex items-center justify-between gap-3">
+                    <label class="text-sm font-medium text-gray-600 flex-1">📝 Tugas</label>
+                    <input id="durTugas" type="number" min="1" max="180" value="45"
+                      class="input-base w-20 text-center text-sm" aria-label="Durasi sesi tugas (menit)"/>
+                  </div>
+                  <div class="flex items-center justify-between gap-3">
+                    <label class="text-sm font-medium text-gray-600 flex-1">☕ Istirahat</label>
+                    <input id="durIstirahat" type="number" min="1" max="180" value="5"
+                      class="input-base w-20 text-center text-sm" aria-label="Durasi istirahat (menit)"/>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sesi Hari Ini -->
+              <div class="card-base p-5">
+                <h3 class="font-bold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                  <span class="w-2 h-2 bg-primary rounded-full inline-block"></span>
+                  Sesi Hari Ini
+                </h3>
+                <ul id="sessionList" class="space-y-2 max-h-64 overflow-y-auto custom-scroll"><!-- injected --></ul>
+                <p id="sessionEmpty" class="text-xs text-gray-400 text-center py-4 hidden">Belum ada sesi hari ini</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========== PAGE: STATISTIK ========== -->
+        <section id="page-statistik" class="page hidden p-4 lg:p-6 max-w-6xl mx-auto w-full">
+          <!-- Summary Cards -->
+          <div class="grid grid-cols-3 gap-3 mb-5">
+            <div class="card-base p-4 text-center">
+              <p class="text-xs text-gray-500 mb-1">Hari Ini</p>
+              <p id="statToday" class="text-xl font-extrabold text-primary">0 mnt</p>
+            </div>
+            <div class="card-base p-4 text-center">
+              <p class="text-xs text-gray-500 mb-1">7 Hari Terakhir</p>
+              <p id="stat7days" class="text-xl font-extrabold text-teal">0 mnt</p>
+            </div>
+            <div class="card-base p-4 text-center">
+              <p class="text-xs text-gray-500 mb-1">Streak</p>
+              <p id="statStreak" class="text-xl font-extrabold text-accent">0 🔥</p>
+            </div>
+          </div>
+
+          <!-- Charts -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- Bar Chart -->
+            <div class="card-base p-5">
+              <h3 class="font-bold text-sm text-gray-700 mb-4">Durasi Belajar 7 Hari</h3>
+              <div id="barChartContainer" class="relative" style="height:220px;">
+                <svg id="barChart" width="100%" height="100%" viewBox="0 0 320 200" preserveAspectRatio="xMidYMid meet"
+                  role="img" aria-label="Grafik batang durasi belajar 7 hari terakhir">
+                </svg>
+                <!-- Tooltip -->
+                <div id="barTooltip" class="chart-tooltip hidden"></div>
+              </div>
+            </div>
+            <!-- Donut Chart -->
+            <div class="card-base p-5">
+              <h3 class="font-bold text-sm text-gray-700 mb-4">Perbandingan Tipe Sesi</h3>
+              <div class="flex items-center justify-center gap-8" style="height:220px;">
+                <div class="relative" style="width:160px;height:160px;">
+                  <svg id="donutChart" width="160" height="160" viewBox="0 0 160 160"
+                    role="img" aria-label="Grafik donat perbandingan belajar dan tugas">
+                  </svg>
+                  <!-- Tooltip -->
+                  <div id="donutTooltip" class="chart-tooltip hidden"></div>
+                </div>
+                <div id="donutLegend" class="space-y-2 text-sm"><!-- injected --></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div><!-- end mainContent -->
+  </div><!-- end appShell -->
+
+  <script src="script.js"></script>
+</body>
+</html>

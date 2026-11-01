@@ -1,0 +1,633 @@
+/* =====================================================
+   NGAMBIS BARENG — style.css
+   Custom styles that complement Tailwind CSS.
+   Tailwind handles layout & utility; this file handles
+   custom components, animations, and edge cases.
+   ===================================================== */
+
+/* ---------- Import font fallback ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+  --color-primary:       #7C3AED;
+  --color-primary-light: #EDE9FE;
+  --color-primary-dark:  #5B21B6;
+  --color-accent:        #F97316;
+  --color-accent-light:  #FFF7ED;
+  --color-teal:          #14B8A6;
+  --color-teal-light:    #CCFBF1;
+  --color-surface:       #F8F7FF;
+  --sidebar-width:       256px; /* 16rem / w-64 */
+  --topbar-height:       60px;
+  --transition-fast:     150ms ease;
+  --transition-base:     250ms ease;
+  --transition-slow:     350ms ease;
+}
+
+/* ---------- Smooth scroll (system preference aware) ---------- */
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Base reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background-color: var(--color-surface);
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+/* ===================================================
+   LAYOUT — Sidebar + Main
+   =================================================== */
+
+/* ── App shell: always a flex row ── */
+#appShell {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── MOBILE sidebar: fixed overlay drawer ── */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: var(--sidebar-width);
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  box-shadow: 2px 0 16px rgba(124, 58, 237, 0.08);
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* When open on mobile */
+#sidebar.sidebar-open {
+  transform: translateX(0);
+  box-shadow: 4px 0 24px rgba(124, 58, 237, 0.15);
+}
+
+/* Main content: always fills remaining space */
+#mainContent {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transition: none; /* no shift on mobile */
+}
+
+/* ── DESKTOP (≥1024px): sidebar is a sticky flex child ── */
+@media (min-width: 1024px) {
+  #sidebar {
+    position: sticky;        /* part of normal flow */
+    top: 0;
+    height: 100vh;
+    flex-shrink: 0;
+    transform: none !important; /* disable mobile transform */
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease;
+    overflow: hidden;
+    width: var(--sidebar-width); /* default: open */
+    opacity: 1;
+  }
+
+  /* Desktop closed: collapse width to 0 */
+  #sidebar.sidebar-desktop-closed {
+    width: 0 !important;
+    opacity: 0;
+  }
+
+  /* Desktop open: full width */
+  #sidebar.sidebar-desktop-open {
+    width: var(--sidebar-width) !important;
+    opacity: 1;
+  }
+
+  /* Hide overlay permanently on desktop */
+  #sidebarOverlay {
+    display: none !important;
+  }
+}
+
+/* ===================================================
+   NAVIGATION BUTTONS
+   =================================================== */
+
+.nav-btn {
+  color: #6B7280; /* gray-500 */
+  transition: background-color var(--transition-fast),
+              color var(--transition-fast);
+}
+
+.nav-btn:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.nav-btn.active {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* ===================================================
+   REUSABLE COMPONENT CLASSES
+   (Tailwind @apply equivalent via class composition)
+   =================================================== */
+
+/* Card container */
+.card-base {
+  background: #ffffff;
+  border-radius: 1rem;       /* rounded-2xl */
+  box-shadow: 0 2px 12px 0 rgba(124,58,237,0.08);
+  transition: box-shadow var(--transition-base);
+}
+.card-base:hover {
+  box-shadow: 0 6px 24px 0 rgba(124,58,237,0.13);
+}
+
+/* Primary button */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+              transform var(--transition-fast),
+              box-shadow var(--transition-fast);
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+}
+.btn-primary:active { transform: scale(0.97); }
+
+/* Secondary button */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1.25rem;
+  background-color: var(--color-teal-light);
+  color: var(--color-teal);
+  font-weight: 700;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+.btn-secondary:hover { background-color: #99f6e4; }
+
+/* Ghost button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 0.875rem;
+  background-color: #F3F4F6;
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 0.8rem;
+  border-radius: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+.btn-ghost:hover { background-color: #E5E7EB; }
+
+/* Input field */
+.input-base {
+  height: 44px;
+  padding: 0 0.875rem;
+  border: 1.5px solid #E5E7EB;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  color: #1F2328;
+  background: #FAFAFA;
+  outline: none;
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+.input-base:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+  background: #ffffff;
+}
+.input-base::placeholder { color: #9CA3AF; }
+
+/* Select specific resets */
+select.input-base { cursor: pointer; }
+
+/* Label */
+.label-base {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.375rem;
+}
+
+/* Error message */
+.err-msg {
+  font-size: 0.7rem;
+  color: #EF4444;
+  margin-top: 0.25rem;
+}
+.err-msg.hidden { display: none; }
+
+/* Input error state */
+.input-error {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 0 3px rgba(239,68,68,0.1) !important;
+}
+
+/* ===================================================
+   TASK ITEMS
+   =================================================== */
+
+.task-item {
+  padding: 0.875rem 1rem;
+  border-radius: 0.875rem;
+  border-left-width: 4px;
+  border-top: 1px solid #F3F4F6;
+  border-right: 1px solid #F3F4F6;
+  border-bottom: 1px solid #F3F4F6;
+  background: #FFFFFF;
+  transition: box-shadow var(--transition-base),
+              opacity var(--transition-base);
+}
+.task-item:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+
+.task-item.belajar  { border-left-color: var(--color-primary); }
+.task-item.tugas    { border-left-color: var(--color-accent); }
+.task-item.done     { opacity: 0.55; border-left-color: #D1D5DB; }
+
+.task-item-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F2328;
+  line-height: 1.4;
+}
+.task-item.done .task-item-title {
+  text-decoration: line-through;
+  color: #9CA3AF;
+}
+
+/* ===================================================
+   PLAN LIST (Today's plan on Beranda)
+   =================================================== */
+
+.plan-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  background: #F8F7FF;
+  border: 1px solid #EDE9FE;
+  transition: background var(--transition-fast);
+}
+.plan-item:hover { background: #EDE9FE; }
+.plan-item.done-plan {
+  opacity: 0.5;
+}
+.plan-item.done-plan .plan-text {
+  text-decoration: line-through;
+  color: #9CA3AF;
+}
+
+/* ===================================================
+   TIMER
+   =================================================== */
+
+#timerProgress {
+  transition: stroke-dashoffset 1s linear,
+              stroke var(--transition-base);
+}
+
+/* When break phase, change color */
+.timer-break #timerProgress { stroke: var(--color-teal); }
+.timer-break #timerPhaseLabel { color: var(--color-teal); }
+
+/* Pulse animation for running timer icon */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(124,58,237,0); }
+  100% { box-shadow: 0 0 0 0 rgba(124,58,237,0); }
+}
+.timer-running-pulse {
+  animation: pulse-ring 2s infinite;
+}
+
+/* ===================================================
+   STREAK / WEEK DOTS
+   =================================================== */
+
+.week-dot {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  transition: transform var(--transition-fast),
+              background-color var(--transition-base);
+}
+.week-dot.done {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+.week-dot.today {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+.week-dot.empty {
+  background-color: #F3F4F6;
+  color: #9CA3AF;
+  border: 2px solid #E5E7EB;
+}
+
+/* ===================================================
+   PROGRESS BAR
+   =================================================== */
+
+.progress-bar-track {
+  height: 6px;
+  background: #EDE9FE;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--color-primary), #a78bfa);
+  transition: width 0.4s ease;
+}
+
+/* ===================================================
+   SESSION LIST
+   =================================================== */
+
+.session-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+  background: #F8F7FF;
+  font-size: 0.8rem;
+}
+
+/* ===================================================
+   SVG CHARTS
+   =================================================== */
+
+.chart-bar {
+  transition: opacity var(--transition-fast);
+  cursor: pointer;
+}
+.chart-bar:hover, .chart-bar:focus { opacity: 0.75; outline: none; }
+
+.chart-tooltip {
+  position: absolute;
+  background: #1F2328;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 50;
+  transform: translate(-50%, -110%);
+}
+
+.donut-slice {
+  transition: opacity var(--transition-fast);
+  cursor: pointer;
+}
+.donut-slice:hover, .donut-slice:focus {
+  opacity: 0.8;
+  outline: none;
+}
+
+/* ===================================================
+   CUSTOM SCROLLBAR
+   =================================================== */
+
+.custom-scroll::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-track { background: transparent; }
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 99px;
+}
+.custom-scroll::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+
+/* ===================================================
+   DEADLINE BADGE
+   =================================================== */
+
+.deadline-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+}
+.deadline-badge.overdue {
+  background: #FEE2E2;
+  color: #EF4444;
+}
+.deadline-badge.soon {
+  background: #FFF7ED;
+  color: #F97316;
+}
+.deadline-badge.ok {
+  background: #F0FDF4;
+  color: #22C55E;
+}
+
+/* ===================================================
+   NOTIFICATION / TOAST
+   =================================================== */
+
+#toast {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  background: #1F2328;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  transform: translateY(calc(100% + 2rem));
+  transition: transform 0.3s ease;
+  z-index: 9999;
+  max-width: 280px;
+}
+#toast.show { transform: translateY(0); }
+
+/* ===================================================
+   PAGE TRANSITIONS
+   =================================================== */
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* Fade-in animation for pages */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page.active {
+  animation: fadeInUp 0.25s ease forwards;
+}
+
+/* ===================================================
+   MASKOT ANIMATIONS
+   =================================================== */
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+.mascot-float {
+  animation: mascot-float 3s ease-in-out infinite;
+}
+
+@keyframes mascot-blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95%           { transform: scaleY(0.1); }
+}
+.mascot-eye {
+  animation: mascot-blink 4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* ── Fire mascot: active state ── */
+@keyframes fire-flicker {
+  0%, 100% { transform: translateY(0) scaleX(1);   filter: brightness(1); }
+  20%       { transform: translateY(-3px) scaleX(0.97); filter: brightness(1.1); }
+  40%       { transform: translateY(-1px) scaleX(1.02); filter: brightness(1.05); }
+  60%       { transform: translateY(-4px) scaleX(0.98); filter: brightness(1.15); }
+  80%       { transform: translateY(-2px) scaleX(1.01); filter: brightness(1.08); }
+}
+.fire-active {
+  animation: fire-flicker 2.4s ease-in-out infinite;
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.55))
+          drop-shadow(0 0 16px rgba(251, 191, 36, 0.3));
+}
+
+/* ── Fire mascot: inactive / sleepy state ── */
+@keyframes fire-sleep {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(2px) rotate(-1.5deg); }
+}
+.fire-inactive {
+  animation: fire-sleep 3.5s ease-in-out infinite;
+  filter: grayscale(0.4) brightness(0.92);
+  opacity: 0.85;
+}
+
+/* ── Hamburger icon: rotate lines to X when open ── */
+.menu-open #menuToggle svg line:nth-child(1) {
+  transform-origin: center;
+  transform: rotate(45deg) translate(4px, 4px);
+  transition: transform 0.25s ease;
+}
+.menu-open #menuToggle svg line:nth-child(2) {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.menu-open #menuToggle svg line:nth-child(3) {
+  transform-origin: center;
+  transform: rotate(-45deg) translate(4px, -4px);
+  transition: transform 0.25s ease;
+}
+#menuToggle svg line {
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+/* ===================================================
+   MOBILE ADJUSTMENTS
+   =================================================== */
+
+@media (max-width: 640px) {
+  .btn-primary, .btn-secondary, .btn-ghost {
+    font-size: 0.8rem;
+  }
+  .card-base {
+    border-radius: 0.875rem;
+  }
+}
+
+/* ===================================================
+   FOCUS VISIBLE (Accessibility)
+   =================================================== */
+
+:focus-visible {
+  outline: 2.5px solid var(--color-primary);
+  outline-offset: 2px;
+}
+button:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ===================================================
+   EDIT INLINE
+   =================================================== */
+
+.task-edit-input {
+  border: 1.5px solid var(--color-primary);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  background: #FAFAFA;
+}
+
+/* ===================================================
+   GRID RESPONSIVE HELPERS
+   =================================================== */
+
+/* Ensure two-column grid on lg for stats cards */
+@media (min-width: 1024px) {
+  #page-statistik .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
